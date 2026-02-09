@@ -35,7 +35,7 @@ const Toast: React.FC<ToastProps> = ({ message, type, visible, onClose }) => {
     const Icon = type === "success" ? CheckCircle : type === "error" ? XCircle : CheckCircle;
 
     return (
-        <div className={`fixed top-4 right-4 z-[9999] flex items-center gap-2 px-4 py-3 rounded shadow-md border ${bgColor}`}>
+        <div className={`fixed top-24 right-4 z-[99999] flex items-center gap-2 px-4 py-3 rounded shadow-md border ${bgColor}`}>
             <Icon className={`w-5 h-5 ${textColor}`} />
             <span className={`font-medium ${textColor}`}>{message}</span>
             <button onClick={onClose} className={`ml-4 ${textColor} hover:opacity-75`}>
