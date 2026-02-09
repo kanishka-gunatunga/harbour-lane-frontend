@@ -14,7 +14,7 @@ export const authOptions: NextAuthOptions = {
 
                 try {
                     // Note: In production, use environment variable for API URL
-                    const res = await fetch("http://localhost:8081/api/auth/login", {
+                    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
                         method: "POST",
                         body: JSON.stringify(credentials),
                         headers: { "Content-Type": "application/json" },
