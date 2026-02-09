@@ -366,7 +366,7 @@ export default function TicketsDashboard() {
                                 <FormField
                                     label="Customer Name"
                                     placeholder="Enter full name"
-                                    register={register("customer_name", { required: "Name is required" })}
+                                    register={register("customer_name", { required: "Name is required", minLength: { value: 2, message: "Name must be at least 2 characters" } })}
                                     error={errors.customer_name as any}
                                 />
                             </div>
@@ -374,7 +374,13 @@ export default function TicketsDashboard() {
                                 <FormField
                                     label="Email"
                                     placeholder="Enter email address"
-                                    register={register("email", { required: "Email is required" })} // Simple regex can be added
+                                    register={register("email", {
+                                        required: "Email is required",
+                                        pattern: {
+                                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                                            message: "Invalid email address"
+                                        }
+                                    })}
                                     error={errors.email as any}
                                 />
                             </div>
@@ -385,7 +391,13 @@ export default function TicketsDashboard() {
                                 <FormField
                                     label="Contact Number"
                                     placeholder="Enter contact number"
-                                    register={register("contact_number", { required: "Contact is required" })}
+                                    register={register("contact_number", {
+                                        required: "Contact is required",
+                                        pattern: {
+                                            value: /^[0-9]{10,15}$/,
+                                            message: "Contact number must be 10-15 digits"
+                                        }
+                                    })}
                                     error={errors.contact_number as any}
                                 />
                             </div>
@@ -427,7 +439,7 @@ export default function TicketsDashboard() {
                             label="Note"
                             type="textarea"
                             placeholder="Enter ticket details or notes..."
-                            register={register("note", { required: "Note is required" })}
+                            register={register("note", { required: "Note is required", minLength: { value: 10, message: "Note must be at least 10 characters" } })}
                             error={errors.note as any}
                         />
                     </form>
