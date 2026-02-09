@@ -8,22 +8,31 @@ export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError("");
+        setIsLoading(true);
 
-        const result = await signIn("credentials", {
-            redirect: false,
-            email,
-            password,
-        });
+        try {
+            const result = await signIn("credentials", {
+                redirect: false,
+                email,
+                password,
+            });
 
-        if (result?.error) {
-            setError("Invalid email or password");
-        } else {
-            router.push("/chat-dashboard");
+            if (result?.error) {
+                setError("Invalid email or password");
+                setIsLoading(false);
+            } else {
+                router.push("/chat-dashboard");
+                // Keep loading true while redirecting
+            }
+        } catch (error) {
+            setError("An unexpected error occurred");
+            setIsLoading(false);
         }
     };
 
@@ -67,10 +76,12 @@ export default function LoginPage() {
                         />
                     </div>
                     <button
-                        className="w-full rounded bg-blue-600 px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className={`w-full rounded px-4 py-2 font-bold text-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${isLoading ? "bg-blue-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
+                            }`}
                         type="submit"
+                        disabled={isLoading}
                     >
-                        Sign In
+                        {isLoading ? "Signing In..." : "Sign In"}
                     </button>
                 </form>
             </div>

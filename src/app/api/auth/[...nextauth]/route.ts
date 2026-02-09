@@ -14,22 +14,35 @@ export const authOptions: NextAuthOptions = {
 
                 try {
                     // Note: In production, use environment variable for API URL
-                    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
+                    const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/login`;
+                    console.log(`[NextAuth] Attempting login to: ${apiUrl}`);
+                    console.time("[NextAuth] Login Request Duration");
+
+                    const res = await fetch(apiUrl, {
                         method: "POST",
                         body: JSON.stringify(credentials),
                         headers: { "Content-Type": "application/json" },
                     });
 
+                    console.timeEnd("[NextAuth] Login Request Duration");
+
+                    if (!res.ok) {
+                        console.error(`[NextAuth] Login failed with status: ${res.status} ${res.statusText}`);
+                        const errorText = await res.text();
+                        console.error(`[NextAuth] Error details: ${errorText}`);
+                        return null;
+                    }
+
                     const user = await res.json();
 
                     // If no error and we have user data, return it
-                    if (res.ok && user) {
+                    if (user) {
                         return user;
                     }
                     // Return null if user data could not be retrieved
                     return null;
                 } catch (error) {
-                    console.error("Login failed:", error);
+                    console.error("[NextAuth] Login exception:", error);
                     return null;
                 }
             }
