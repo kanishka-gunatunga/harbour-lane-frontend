@@ -650,7 +650,7 @@ export default function ChatLauncher() {
                                                     <Image src="/agent.png" width={30} height={30} alt="Bot"
                                                         style={styles.botAvatar} />
                                                     <div style={styles.messageWrapper}>
-                                                        <span style={styles.botName}>Indra Assistant</span>
+                                                        <span style={styles.botName}>Harbour Lane Assistant</span>
                                                         <div style={styles.botBubble}>
                                                             Hello! Welcome to Harbour Lane. How can I help you today?
                                                         </div>
@@ -684,7 +684,7 @@ export default function ChatLauncher() {
                                                         <div
                                                             style={m.sender === "customer" ? styles.userMessageWrapper : styles.messageWrapper}>
                                                             {m.sender !== "customer" && (
-                                                                <span style={styles.botName}>Indra Assistant</span>
+                                                                <span style={styles.botName}>Harbour Lane Assistant</span>
                                                             )}
                                                             <div
                                                                 style={m.sender === "customer" ? styles.userBubble : styles.botBubble}>
