@@ -24,10 +24,14 @@ export default function LoginPage() {
                 callbackUrl: "/chat-dashboard",
             });
 
+            console.log("[Login] signIn result:", result);
+
             if (result?.error) {
+                console.error("[Login] Error:", result.error);
                 setError("Invalid email or password");
                 setIsLoading(false);
             } else {
+                console.log("[Login] Success, redirecting to /chat-dashboard");
                 router.replace("/chat-dashboard");
                 // Keep loading true while redirecting
             }
