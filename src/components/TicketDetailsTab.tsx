@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { FiPlus } from "react-icons/fi";
-import { ComplainStatus } from "./FlowBar";
+import type { ComplainStatus } from "./FlowBar";
 import { useCurrentUser } from "@/utils/auth";
 
 interface Followup {
