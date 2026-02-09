@@ -21,13 +21,14 @@ export default function LoginPage() {
                 redirect: false,
                 email,
                 password,
+                callbackUrl: "/chat-dashboard",
             });
 
             if (result?.error) {
                 setError("Invalid email or password");
                 setIsLoading(false);
             } else {
-                router.push("/chat-dashboard");
+                router.replace("/chat-dashboard");
                 // Keep loading true while redirecting
             }
         } catch (error) {
