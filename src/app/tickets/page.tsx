@@ -19,7 +19,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/useToast";
 import Toast from "@/components/Toast";
 
-const category = ["Complaint", "Inquiry", "Tech Support", "billing"];
+const category = ["Complaint", "Inquiry"];
 const status = ["New", "In Review", "Processing", "Approval", "Completed"];
 
 export default function TicketsDashboard() {
@@ -89,7 +89,7 @@ export default function TicketsDashboard() {
 
     return (
         <div className="relative w-full min-h-screen bg-[#E6E6E6B2]/70 backdrop-blur-md text-gray-900 montserrat overflow-x-hidden">
-            <main className="pt-30 px-16 ml-16 max-w-[1440px] mx-auto flex flex-col gap-8">
+            <main className="pt-30 px-16 ml-16 max-w-[2540px] mx-auto flex flex-col gap-8">
                 <section
                     className="relative mb-5 bg-[#FFFFFF4D] bg-opacity-30 border border-[#E0E0E0] rounded-[45px] px-9 py-10 flex flex-col justify-center items-center">
                     <div className="w-full flex justify-between items-center">
@@ -409,8 +409,8 @@ export default function TicketsDashboard() {
                                     options={[
                                         { value: "Complaint", label: "Complaint" },
                                         { value: "Inquiry", label: "Inquiry" },
-                                        { value: "Tech Support", label: "Tech Support" },
-                                        { value: "Billing", label: "Billing" },
+                                        // { value: "Tech Support", label: "Tech Support" },
+                                        // { value: "Billing", label: "Billing" },
                                     ]}
                                     register={register("inquiry_type", { required: "Type is required" })}
                                     error={errors.inquiry_type as any}
