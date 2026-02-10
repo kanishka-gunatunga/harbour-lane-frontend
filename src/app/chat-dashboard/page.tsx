@@ -276,7 +276,7 @@ const ChatDashboard: React.FC = () => {
     }
 
     return (
-        <div className="flex items-center justify-center min-h-screen w-full bg-[#e0e0e0] p-6 pt-28 pb-20 md:p-6 md:pt-32">
+        <div className="flex items-center justify-center min-h-screen w-full bg-[#e0e0e0] p-6 pt-28 pb-20 md:p-24 md:pt-32">
             {lightboxUrl && <ImageLightbox src={lightboxUrl} onClose={() => setLightboxUrl(null)} />}
 
             {/* --- Main Card Container (Resized) --- */}
