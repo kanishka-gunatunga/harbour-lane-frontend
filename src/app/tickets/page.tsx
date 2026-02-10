@@ -176,7 +176,7 @@ export default function TicketsDashboard() {
                                                     <div className="w-1/5 px-3 py-2">{item.category}</div>
                                                     <div className="w-1/5 px-3 py-2">{item.ticket_number}</div>
                                                     <div className="w-1/5 px-3 py-2">{item.customer?.mobile || "N/A"}</div>
-                                                    <div className="w-1/5 px-3 py-2">{item.customer?.email || "N/A"}</div>
+                                                    <div className="w-1/5 px-3 py-2 truncate" title={item.customer?.email}>{item.customer?.email || "N/A"}</div>
                                                     <div className="w-1/5 px-3 py-2">{item.status}</div>
                                                 </div>
                                             ))
