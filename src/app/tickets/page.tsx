@@ -192,7 +192,7 @@ export default function TicketsDashboard() {
                     )}
                 </section>
 
-                <section className="relative flex flex-col xl:flex-row w-full mb-5 gap-5">
+                <section className="relative flex flex-col min-[1445px]:flex-row w-full mb-5 gap-5">
                     {/* Next Action (Upcoming Reminders) */}
                     <div className="flex flex-col flex-1 w-full bg-[#FFFFFF4D] bg-opacity-30 border border-[#E0E0E0] rounded-[30px] md:rounded-[45px] px-6 py-6 md:px-9 md:py-10 min-h-[400px]">
                         <span className="font-semibold text-[22px]">Next Action</span>
