@@ -134,7 +134,7 @@ export default function TicketDetailsPage() {
                 visible={toast.visible}
                 onClose={hideToast}
             />
-            <main className="pt-30 px-16 ml-16 max-w-[2540px] mx-auto flex flex-col gap-8">
+            <main className="pt-30 px-16 ml-16 max-w-[2500px] mx-auto flex flex-col gap-8">
                 {/* Back Button */}
                 <div className="w-full flex justify-start">
                     <button
