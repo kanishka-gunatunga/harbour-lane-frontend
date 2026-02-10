@@ -136,15 +136,15 @@ export default function Modal({
             <div
                 ref={modalRef}
                 tabIndex={-1}
-                className={`relative rounded-[45px] border border-[#E7E7E7] bg-[#FFFFFF]/70 opacity-70 backdrop-blur-[60px] shadow-2xl p-8 z-10 max-h-[90vh] 
-         max-w-[1350px] overflow-y-auto custom-scrollbar`}
+                className={`relative rounded-[25px] md:rounded-[45px] border border-[#E7E7E7] bg-[#FFFFFF]/70 opacity-70 backdrop-blur-[60px] shadow-2xl p-4 md:p-8 z-10 max-h-[90vh] 
+         w-[95%] md:w-auto max-w-[1350px] overflow-y-auto custom-scrollbar`}
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Title row */}
-                <div className="absolute top-6 left-8 flex items-center gap-4">
+                <div className="flex flex-col md:flex-row md:items-center gap-4 mb-6 md:mb-0 md:absolute md:top-6 md:left-8">
                     <h2
                         id="modal-title"
-                        className="font-montserrat font-semibold text-[22px] leading-[100%]"
+                        className="font-montserrat font-semibold text-lg md:text-[22px] leading-[100%]"
                     >
                         {title}
                     </h2>
@@ -180,11 +180,11 @@ export default function Modal({
                     <button
                         onClick={actionButton.onClick}
                         disabled={actionButton.disabled}
-                        className={`absolute top-6 right-8 flex items-center cursor-pointer justify-center ${actionButton.icon
+                        className={`md:absolute md:top-6 md:right-8 flex items-center cursor-pointer justify-center mb-6 md:mb-0 ${actionButton.icon
                             ? // Icon-only button
                             "w-[50px] h-[50px] rounded-full bg-[#E7E7E7] shadow-md"
                             : // Text-only button
-                            "w-[121px] h-[41px] rounded-[30px] bg-[#DB2727] text-white px-[18px] hover:bg-red-700"
+                            "w-full md:w-[121px] h-[41px] rounded-[30px] bg-[#DB2727] text-white px-[18px] hover:bg-red-700"
                             }
             ${actionButton.disabled
                                 ? "opacity-50 cursor-not-allowed bg-gray-400"
@@ -202,7 +202,7 @@ export default function Modal({
                 )}
 
                 {/* Modal content */}
-                <div className="mt-16">{children}</div>
+                <div className="mt-4 md:mt-16">{children}</div>
             </div>
         </div>,
         containerRef.current
