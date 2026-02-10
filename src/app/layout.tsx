@@ -5,6 +5,7 @@ import { Providers } from "./providers";
 import ChatLauncher from "@/components/ChatLauncher";
 import SideMenu from "@/components/SideMenu";
 import Navbar from "@/components/Navbar";
+import MobileNav from "@/components/MobileNav";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,6 +41,7 @@ export default function RootLayout({
         <Providers>
           <Navbar />
           <SideMenu />
+          <MobileNav />
           {children}
           <ChatLauncher />
         </Providers>

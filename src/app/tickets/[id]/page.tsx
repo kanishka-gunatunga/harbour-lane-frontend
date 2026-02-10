@@ -134,7 +134,7 @@ export default function TicketDetailsPage() {
                 visible={toast.visible}
                 onClose={hideToast}
             />
-            <main className="pt-30 px-16 ml-16 max-w-[2500px] mx-auto flex flex-col gap-8">
+            <main className="pt-28 pb-20 px-4 md:pt-30 md:pb-0 md:px-16 md:ml-16 max-w-[2500px] mx-auto flex flex-col gap-8 transition-all duration-300">
                 {/* Back Button */}
                 <div className="w-full flex justify-start">
                     <button
@@ -147,10 +147,10 @@ export default function TicketDetailsPage() {
                 </div>
 
                 <section
-                    className="relative bg-[#FFFFFF4D] mb-5 bg-opacity-30 rounded-[45px] border border-[#E0E0E0] px-9 py-10 flex flex-col justify-center items-center">
+                    className="relative bg-[#FFFFFF4D] mb-5 bg-opacity-30 rounded-[30px] md:rounded-[45px] border border-[#E0E0E0] px-6 py-6 md:px-9 md:py-10 flex flex-col justify-center items-center">
                     {/* Header */}
-                    <div className="flex w-full justify-between items-center">
-                        <div className="flex flex-wrap w-full gap-4 max-[1140px]:gap-2 items-center">
+                    <div className="flex flex-col md:flex-row w-full justify-between items-center gap-4 md:gap-0">
+                        <div className="flex flex-wrap w-full gap-4 max-[1140px]:gap-2 items-center justify-center md:justify-start">
                             <span className="font-semibold text-[22px] max-[1140px]:text-[18px]">
                                 Ticket No. {ticket.ticket_number}
                             </span>
@@ -179,8 +179,8 @@ export default function TicketDetailsPage() {
                     </div>
 
                     {/* Tabs */}
-                    <div className="w-full flex mt-10">
-                        <div className="w-2/5">
+                    <div className="w-full flex flex-col lg:flex-row mt-10 gap-8 lg:gap-0">
+                        <div className="w-full lg:w-2/5">
                             <div className="mb-6 font-semibold text-[20px] max-[1140px]:text-[18px]">
                                 Customer Details
                             </div>
@@ -198,7 +198,7 @@ export default function TicketDetailsPage() {
 
                         </div>
 
-                        <div className="w-3/5 flex flex-col min-h-[400px]">
+                        <div className="w-full lg:w-3/5 flex flex-col min-h-[400px]">
                             {/* Pass loading states implicitly by passing empty arrays if loading, 
                                 but ideal would be to handle loading inside DetailsTab.
                                 For now, we trust React Query eventual consistency. */}
@@ -236,7 +236,7 @@ export default function TicketDetailsPage() {
                             type="text"
                             value={activityText}
                             onChange={(e) => setActivityText(e.target.value)}
-                            className="w-[600px] h-[51px] rounded-[30px] bg-[#FFFFFF80] border border-black/50 backdrop-blur-[50px] px-4 mt-2"
+                            className="w-full md:w-[600px] h-[51px] rounded-[30px] bg-[#FFFFFF80] border border-black/50 backdrop-blur-[50px] px-4 mt-2"
                         />
                     </div>
                 </Modal>
@@ -259,7 +259,7 @@ export default function TicketDetailsPage() {
                                 type="text"
                                 value={reminderTitle}
                                 onChange={(e) => setReminderTitle(e.target.value)}
-                                className="w-[400px] max-[1345px]:w-[280px] h-[51px] rounded-[30px] bg-[#FFFFFF80] border border-black/50 backdrop-blur-[50px] px-4"
+                                className="w-full h-[51px] rounded-[30px] bg-[#FFFFFF80] border border-black/50 backdrop-blur-[50px] px-4"
                             />
                         </div>
                         <div>
@@ -268,7 +268,7 @@ export default function TicketDetailsPage() {
                                 type="date"
                                 value={reminderDate}
                                 onChange={(e) => setReminderDate(e.target.value)}
-                                className="w-[400px] max-[1345px]:w-[280px] h-[51px] rounded-[30px] bg-[#FFFFFF80] border border-black/50 backdrop-blur-[50px] px-4"
+                                className="w-full h-[51px] rounded-[30px] bg-[#FFFFFF80] border border-black/50 backdrop-blur-[50px] px-4"
                             />
                         </div>
                         <div>
@@ -277,7 +277,7 @@ export default function TicketDetailsPage() {
                                 type="text"
                                 value={reminderNote}
                                 onChange={(e) => setReminderNote(e.target.value)}
-                                className="w-[400px] max-[1345px]:w-[280px] h-[51px] rounded-[30px] bg-[#FFFFFF80] border border-black/50 backdrop-blur-[50px] px-4"
+                                className="w-full h-[51px] rounded-[30px] bg-[#FFFFFF80] border border-black/50 backdrop-blur-[50px] px-4"
                             />
                         </div>
                     </div>

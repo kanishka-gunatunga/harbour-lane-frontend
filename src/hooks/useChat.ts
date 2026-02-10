@@ -55,10 +55,38 @@ export function useAgentChat(agentId: number | undefined) {
 
                 // Clear typing indicator when a new message arrives
                 setIsCustomerTyping(false);
+
+                // If we are looking at this chat, ensure we mark it as read immediately on server?
+                // Or rely on selectChat to have done it?
+                // Ideally, if window is focused, we read it. For now, let's assume focus.
+                socket.emit("agent.read", { chat_id: msg.chat_id });
             }
 
             // Always refresh assigned list to show new time/preview in sidebar
-            fetchAssigned();
+            // Optimistic update for sidebar
+            setAssigned((prev) => {
+                const chatIndex = prev.findIndex((c) => c.chat_id === msg.chat_id);
+                if (chatIndex === -1) {
+                    // If not in assigned list, it might be a new assignment or queue item.
+                    // For now, if we get a message for a chat we don't have in assigned, maybe fetchAssigned is safest?
+                    fetchAssigned();
+                    return prev;
+                }
+
+                const chat = prev[chatIndex];
+                const updatedChat = {
+                    ...chat,
+                    last_message_at: msg.createdAt || new Date().toISOString(), // Use msg time or now
+                    unread_count: selectedChatIdRef.current === msg.chat_id
+                        ? 0 // If open, unread is 0
+                        : (chat.unread_count || 0) + 1 // Else increment
+                };
+
+                // Move to top
+                const newAssigned = [...prev];
+                newAssigned.splice(chatIndex, 1);
+                return [updatedChat, ...newAssigned];
+            });
         });
 
         socket.on("typing", ({ by, chat_id }) => {
@@ -102,10 +130,17 @@ export function useAgentChat(agentId: number | undefined) {
     };
 
     // --- Actions ---
-    const selectChat = async (chat_id: string) => {
+    const selectChat = async (chat_id: string | null) => {
         if (selectedChatId === chat_id) return;
 
         setSelectedChatId(chat_id); // Updates state
+
+        if (!chat_id) {
+            setMessages([]);
+            setIsCustomerTyping(false);
+            return;
+        }
+
         // Ref will update via the useEffect above
 
         setMessages([]);
@@ -130,6 +165,19 @@ export function useAgentChat(agentId: number | undefined) {
 
     const acceptChat = (chat_id: string) => {
         if (!agentId) return;
+
+        // Optimistic Update: Remove from queue and add to assigned immediately
+        const chatToMove = queue.find(c => c.chat_id === chat_id);
+        if (chatToMove) {
+            setQueue(prev => prev.filter(c => c.chat_id !== chat_id));
+            setAssigned(prev => {
+                // Prevent duplicates
+                if (prev.some(c => c.chat_id === chat_id)) return prev;
+                // Add to top of assigned list with updated status
+                return [{ ...chatToMove, status: 'assigned', agent_id: agentId, unread_count: 0 }, ...prev];
+            });
+        }
+
         socketRef.current?.emit("agent.accept", { chat_id, agent_id: agentId });
         selectChat(chat_id);
     };

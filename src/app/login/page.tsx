@@ -4,6 +4,8 @@ import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
+import Link from "next/link";
+
 export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -21,7 +23,6 @@ export default function LoginPage() {
                 redirect: false,
                 email,
                 password,
-                callbackUrl: "/chat-dashboard",
             });
 
             console.log("[Login] signIn result:", result);
@@ -89,6 +90,13 @@ export default function LoginPage() {
                         {isLoading ? "Signing In..." : "Sign In"}
                     </button>
                 </form>
+
+                <div className="mt-4 text-center text-sm">
+                    <span className="text-gray-600">Don't have an account? </span>
+                    <Link href="/register" className="font-semibold text-blue-600 hover:text-blue-500">
+                        Register
+                    </Link>
+                </div>
             </div>
         </div>
     );

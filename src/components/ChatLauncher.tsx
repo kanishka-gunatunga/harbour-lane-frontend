@@ -21,22 +21,30 @@ const renderBold = (text: string) => {
 
 
 const ChatMessageContent = ({ msg, onImageClick }: { msg: any, onImageClick: (url: string) => void }) => {
-    const { message, attachment_url, attachment_type, file_name } = msg;
+    // Fallback for old messages or flat structure if any, but prioritize nested 'attachment' object
+    const attachment = msg.attachment || {};
+    const { url, type, name } = attachment;
+
+    // Check old fields if new ones missing (backward compatibility)
+    const attachmentUrl = url || msg.attachment_url;
+    const attachmentType = type || msg.attachment_type;
+    const fileName = name || msg.file_name;
 
     const getFullUrl = (url: string) => {
-        if (url?.startsWith('http')) return url;
+        if (!url) return "";
+        if (url.startsWith('http')) return url;
         return `${process.env.NEXT_PUBLIC_API_URL || ''}${url}`;
     };
 
-    const fullUrl = getFullUrl(attachment_url);
+    const fullUrl = getFullUrl(attachmentUrl);
 
     return (
         <div className="flex flex-col gap-1">
-            {attachment_type === 'image' && attachment_url && (
+            {attachmentType === 'image' && fullUrl && (
                 <div
                     className="mb-1 relative w-full max-w-[200px] h-auto rounded-lg overflow-hidden border border-gray-200">
                     <img
-                        src={process.env.NEXT_PUBLIC_API_URL + attachment_url}
+                        src={fullUrl}
                         alt="attachment"
                         className="w-full h-auto object-cover"
                         loading="lazy"
@@ -45,9 +53,9 @@ const ChatMessageContent = ({ msg, onImageClick }: { msg: any, onImageClick: (ur
                 </div>
             )}
 
-            {attachment_type === 'document' && attachment_url && (
+            {attachmentType === 'document' && fullUrl && (
                 <a
-                    href={process.env.NEXT_PUBLIC_API_URL + attachment_url}
+                    href={fullUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 p-3 bg-black/5 rounded-lg hover:bg-black/10 transition mb-1 no-underline"
@@ -61,15 +69,15 @@ const ChatMessageContent = ({ msg, onImageClick }: { msg: any, onImageClick: (ur
                     </div>
                     <div className="flex flex-col overflow-hidden">
                         <span
-                            className="text-xs font-medium truncate max-w-[150px] text-gray-700">{file_name || "Document"}</span>
+                            className="text-xs font-medium truncate max-w-[150px] text-gray-700">{fileName || "Document"}</span>
                         <span className="text-[10px] text-gray-500 uppercase">Download</span>
                     </div>
                 </a>
             )}
 
-            {message && (
+            {msg.message && (
                 <div className="whitespace-pre-wrap overflow-wrap-anywhere">
-                    {renderBold(message)}
+                    {renderBold(msg.message)}
                 </div>
             )}
         </div>
@@ -234,7 +242,8 @@ export default function ChatLauncher() {
         sendStopTyping,
         isChatStarting,
         upgradeSessionMutation,
-        connectionStatus
+        connectionStatus,
+        isAgentActive
     } = useCustomerChat();
 
     const [input, setInput] = useState("");
@@ -737,19 +746,21 @@ export default function ChatLauncher() {
                                                 onChange={handleFileChange}
                                                 accept="image/*,.pdf,.doc,.docx,.txt"
                                             />
-                                            <button
-                                                type="button"
-                                                onClick={handleAttachClick}
-                                                disabled={isUploading}
-                                                className="p-2 hover:bg-gray-200 rounded-full transition text-gray-500"
-                                            >
-                                                {isUploading ? (
-                                                    <div
-                                                        className="w-5 h-5 border-2 border-gray-300 border-t-red-500 rounded-full animate-spin"></div>
-                                                ) : (
-                                                    <AttachIcon />
-                                                )}
-                                            </button>
+                                            {isAgentActive && (
+                                                <button
+                                                    type="button"
+                                                    onClick={handleAttachClick}
+                                                    disabled={isUploading}
+                                                    className="p-2 hover:bg-gray-200 rounded-full transition text-gray-500"
+                                                >
+                                                    {isUploading ? (
+                                                        <div
+                                                            className="w-5 h-5 border-2 border-gray-300 border-t-red-500 rounded-full animate-spin"></div>
+                                                    ) : (
+                                                        <AttachIcon />
+                                                    )}
+                                                </button>
+                                            )}
 
                                             <div
                                                 style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '5px' }}>

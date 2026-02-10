@@ -30,7 +30,7 @@ const SideMenu: React.FC<SideMenuProps> = () => {
     };
 
     return (
-        <aside className="fixed top-32 left-8 flex flex-col gap-6 z-40">
+        <aside className="hidden md:flex fixed top-32 left-8 flex-col gap-6 z-40">
             {/* Back Button */}
             <button
                 onClick={() => router.back()}

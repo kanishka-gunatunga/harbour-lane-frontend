@@ -113,13 +113,21 @@ const ImageLightbox = ({ src, onClose }: { src: string, onClose: () => void }) =
 };
 
 const ChatMessageContent = ({ msg, onImageClick }: { msg: any, onImageClick: (url: string) => void }) => {
-    const { message, attachment_url, attachment_type, file_name } = msg;
+    // Fallback for old messages or flat structure if any, but prioritize nested 'attachment' object
+    const attachment = msg.attachment || {};
+    const { url, type, name } = attachment;
+
+    // Check old fields if new ones missing (backward compatibility)
+    const attachmentUrl = url || msg.attachment_url;
+    const attachmentType = type || msg.attachment_type;
+    const fileName = name || msg.file_name;
+
     const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
-    const fullUrl = attachment_url ? (attachment_url.startsWith('http') ? attachment_url : `${API_URL}${attachment_url}`) : null;
+    const fullUrl = attachmentUrl ? (attachmentUrl.startsWith('http') ? attachmentUrl : `${API_URL}${attachmentUrl}`) : null;
 
     return (
         <div className="flex flex-col gap-1">
-            {attachment_type === 'image' && fullUrl && (
+            {attachmentType === 'image' && fullUrl && (
                 <div className="mb-1 mt-1 relative w-full max-w-[250px] rounded-lg overflow-hidden border border-gray-200 group">
                     <img
                         src={fullUrl}
@@ -131,7 +139,7 @@ const ChatMessageContent = ({ msg, onImageClick }: { msg: any, onImageClick: (ur
                 </div>
             )}
 
-            {attachment_type === 'document' && fullUrl && (
+            {attachmentType === 'document' && fullUrl && (
                 <a
                     href={fullUrl}
                     target="_blank"
@@ -142,16 +150,15 @@ const ChatMessageContent = ({ msg, onImageClick }: { msg: any, onImageClick: (ur
                         <DocumentIcon />
                     </div>
                     <div className="flex flex-col overflow-hidden">
-                        <span className="text-xs font-medium truncate max-w-[180px] text-gray-700">{file_name || "Document"}</span>
+                        <span className="text-xs font-medium truncate max-w-[180px] text-gray-700">{fileName || "Document"}</span>
                         <span className="text-[9px] text-gray-500 uppercase font-semibold">Click to download</span>
                     </div>
                 </a>
             )}
 
-            {message && (
-                // <div className="whitespace-pre-wrap word-break-normal overflow-wrap-anywhere">
+            {msg.message && (
                 <div className="whitespace-pre-wrap word-break-normal overflow-wrap-anywhere">
-                    {message}
+                    {msg.message}
                 </div>
             )}
         </div>
@@ -269,15 +276,15 @@ const ChatDashboard: React.FC = () => {
     }
 
     return (
-        <div className="flex items-center justify-center min-h-screen w-full bg-[#e0e0e0] p-6">
+        <div className="flex items-center justify-center min-h-screen w-full bg-[#e0e0e0] p-6 pt-28 pb-20 md:p-6 md:pt-32">
             {lightboxUrl && <ImageLightbox src={lightboxUrl} onClose={() => setLightboxUrl(null)} />}
 
             {/* --- Main Card Container (Resized) --- */}
             <div
-                className="flex w-full max-w-6xl h-[75vh] bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200">
+                className="flex w-full md:max-w-6xl h-[calc(100vh-3rem)] md:h-[75vh] bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200">
 
                 {/* --- LEFT SIDEBAR (Lists) --- */}
-                <aside className="w-[320px] flex flex-col border-r border-gray-200 bg-white">
+                <aside className={`w-full md:w-[320px] flex-col border-r border-gray-200 bg-white ${selectedChatId ? 'hidden md:flex' : 'flex'}`}>
 
                     {/* Header */}
                     <div className="h-16 bg-[#F0F2F5] px-4 flex items-center gap-3 border-b border-gray-200">
@@ -379,7 +386,7 @@ const ChatDashboard: React.FC = () => {
                     </div>
                 </aside>
 
-                <main className="flex-1 flex flex-col relative bg-[#EFE7DD] bg-opacity-40">
+                <main className={`flex-1 flex-col relative bg-[#EFE7DD] bg-opacity-40 ${selectedChatId ? 'flex' : 'hidden md:flex'}`}>
                     <div className="absolute inset-0 opacity-[0.06] pointer-events-none"
                         style={{ backgroundImage: "url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')" }}></div>
 
@@ -387,15 +394,26 @@ const ChatDashboard: React.FC = () => {
                         <>
                             {/* Chat Header */}
                             <header
-                                className="h-16 bg-[#F0F2F5] px-6 flex items-center justify-between border-b border-gray-300 z-10">
+                                className="h-16 bg-[#F0F2F5] px-4 md:px-6 flex items-center justify-between border-b border-gray-300 z-10">
                                 <div className="flex items-center gap-3">
+                                    {/* Back Button for Mobile */}
+                                    <button
+                                        onClick={() => selectChat(null)}
+                                        className="md:hidden p-2 -ml-2 text-gray-600 hover:bg-gray-200 rounded-full"
+                                    >
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+                                            <path fillRule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
+                                        </svg>
+                                    </button>
+
                                     <div
                                         className="w-9 h-9 rounded-full bg-gray-300 flex items-center justify-center text-white">
                                         <UserIcon />
                                     </div>
                                     <div>
                                         <h3 className="font-medium text-gray-800 text-sm">Guest Customer</h3>
-                                        <p className="text-[10px] text-gray-500">{selectedChatId}</p>
+                                        <p className="text-[10px] text-gray-500 hidden md:block">{selectedChatId}</p>
+                                        <p className="text-[10px] text-gray-500 md:hidden">{selectedChatId.substring(0, 8)}...</p>
                                     </div>
                                 </div>
 
@@ -411,7 +429,7 @@ const ChatDashboard: React.FC = () => {
                                 </button>
                             </header>
 
-                            <div className="flex-1 overflow-y-auto p-6 space-y-3 z-10 custom-scrollbar">
+                            <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-3 z-10 custom-scrollbar">
                                 {messages.map((msg: any, index: number) => {
 
                                     if (index > 0 && messages[index - 1].id === msg.id) return null;
@@ -438,13 +456,12 @@ const ChatDashboard: React.FC = () => {
                                             className={`flex ${isOutbound ? "justify-end" : "justify-start"}`}>
                                             <div
                                                 className={`
-                                                    max-w-[65%] rounded-lg px-3 py-2 text-sm shadow-sm relative
+                                                    max-w-[85%] md:max-w-[70%] rounded-lg px-3 py-2 text-sm shadow-sm relative
                                                     ${isOutbound ? "bg-[#DB2727] text-white rounded-tr-none" : "bg-white text-gray-800 rounded-tl-none"}
                                                 `}
                                                 style={{
                                                     wordBreak: "normal",
                                                     overflowWrap: "anywhere",
-                                                    maxWidth: "70%"
                                                 }}
                                             >
 

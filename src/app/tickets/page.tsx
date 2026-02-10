@@ -89,14 +89,14 @@ export default function TicketsDashboard() {
 
     return (
         <div className="relative w-full min-h-screen bg-[#E6E6E6B2]/70 backdrop-blur-md text-gray-900 montserrat overflow-x-hidden">
-            <main className="pt-30 px-16 ml-16 max-w-[2540px] mx-auto flex flex-col gap-8">
+            <main className="pt-28 pb-20 px-4 md:pt-30 md:pb-0 md:px-16 md:ml-16 max-w-[2540px] mx-auto flex flex-col gap-8 transition-all duration-300">
                 <section
-                    className="relative mb-5 bg-[#FFFFFF4D] bg-opacity-30 border border-[#E0E0E0] rounded-[45px] px-9 py-10 flex flex-col justify-center items-center">
-                    <div className="w-full flex justify-between items-center">
-                        <span className="font-semibold text-[22px]">All Tickets</span>
+                    className="relative mb-5 bg-[#FFFFFF4D] bg-opacity-30 border border-[#E0E0E0] rounded-[30px] md:rounded-[45px] px-6 py-6 md:px-9 md:py-10 flex flex-col justify-center items-center">
+                    <div className="w-full flex flex-col md:flex-row justify-between items-center gap-4 md:gap-0">
+                        <span className="font-semibold text-[22px] self-start md:self-auto">All Tickets</span>
 
-                        <div className="flex gap-5">
-                            <div className="relative flex items-center justify-end">
+                        <div className="flex gap-3 md:gap-5 w-full md:w-auto flex-wrap md:flex-nowrap justify-end">
+                            <div className="relative flex items-center justify-end flex-grow md:flex-grow-0">
                                 <input
                                     type="text"
                                     value={searchUserQuery}
@@ -107,7 +107,7 @@ export default function TicketsDashboard() {
                                     bg-white/80 backdrop-blur-sm text-gray-800 placeholder-gray-500
                                     rounded-full border border-gray-300 outline-none
                                     transition-all duration-300 ease-in-out h-10 text-sm
-                                    ${isSearchUserActive ? 'w-64 px-4 opacity-100 mr-2 border' : 'w-0 px-0 opacity-0 border-none'}
+                                    ${isSearchUserActive ? 'w-full md:w-64 px-4 opacity-100 mr-2 border' : 'w-0 px-0 opacity-0 border-none'}
                                 `}
                                     autoFocus={isSearchUserActive}
                                 />
@@ -152,7 +152,7 @@ export default function TicketsDashboard() {
                     ) : (
 
                         <div className="w-full mt-5 ">
-                            <div className="h-[400px] overflow-x-auto overflow-y-hidden ">
+                            <div className="h-[400px] overflow-x-auto overflow-y-hidden rounded-lg">
                                 <div className="min-w-[1000px] ">
                                     {/* Table header */}
                                     <div
@@ -192,28 +192,28 @@ export default function TicketsDashboard() {
                     )}
                 </section>
 
-                <section className="relative flex w-full mb-5 gap-5">
+                <section className="relative flex flex-col lg:flex-row w-full mb-5 gap-5">
                     {/* Next Action (Upcoming Reminders) */}
-                    <div className="flex flex-col flex-1 w-0 bg-[#FFFFFF4D] bg-opacity-30 border border-[#E0E0E0] rounded-[45px] px-9 py-10 min-h-[400px]">
+                    <div className="flex flex-col flex-1 w-full bg-[#FFFFFF4D] bg-opacity-30 border border-[#E0E0E0] rounded-[30px] md:rounded-[45px] px-6 py-6 md:px-9 md:py-10 min-h-[400px]">
                         <span className="font-semibold text-[22px]">Next Action</span>
-                        <div className="h-full mt-5 overflow-y-auto no-scrollbar pr-2">
+                        <div className="h-full mt-5 overflow-auto no-scrollbar pr-2">
                             {/* Table header */}
-                            <div className="flex font-medium text-[#575757] min-w-[400px] mb-2">
+                            <div className="flex font-medium text-[#575757] min-w-[500px] mb-2">
                                 <div className="w-1/3 px-2">Ticket No.</div>
                                 <div className="w-1/3 px-2">Customer Name</div>
                                 <div className="w-1/3 px-2">Task Title</div>
                                 <div className="w-1/4 px-2">Date</div>
                             </div>
-                            <hr className="border-gray-300 mb-4" />
+                            <hr className="border-gray-300 mb-4 min-w-[500px]" />
 
-                            <div className="h-[200px] max-h-[300px] overflow-y-auto no-scrollbar">
+                            <div className="h-[200px] max-h-[300px] overflow-y-auto no-scrollbar min-w-[500px]">
                                 {/* Table rows */}
                                 {reminderData && reminderData.length > 0 ? (
                                     reminderData.map((item: any, idx: number) => (
                                         <div
                                             key={idx}
                                             className={`flex ${idx > 0 ? "mt-3" : ""
-                                                } font-medium text-black min-w-[400px] hover:bg-white/50 p-2 rounded-lg transition-colors cursor-pointer`}
+                                                } font-medium text-black min-w-full hover:bg-white/50 p-2 rounded-lg transition-colors cursor-pointer`}
                                             onClick={() => router.push(`/tickets/${item.ticket_id}`)}
                                         >
                                             <div className="w-1/3 px-2 truncate">{item.Ticket?.ticket_number || "N/A"}</div>
@@ -230,26 +230,26 @@ export default function TicketsDashboard() {
                     </div>
 
                     {/* Recent Activity (FollowUps) */}
-                    <div className="flex flex-col flex-1 w-0 bg-[#FFFFFF4D] bg-opacity-30 border border-[#E0E0E0] rounded-[45px] px-9 py-10 min-h-[400px]">
+                    <div className="flex flex-col flex-1 w-full bg-[#FFFFFF4D] bg-opacity-30 border border-[#E0E0E0] rounded-[30px] md:rounded-[45px] px-6 py-6 md:px-9 md:py-10 min-h-[400px]">
                         <span className="font-semibold text-[22px]">Recent Activity</span>
-                        <div className="h-full mt-5 overflow-y-auto no-scrollbar pr-2">
+                        <div className="h-full mt-5 overflow-auto no-scrollbar pr-2">
                             {/* Table header */}
-                            <div className="flex font-medium text-[#575757] min-w-[400px] mb-2">
+                            <div className="flex font-medium text-[#575757] min-w-[500px] mb-2">
                                 <div className="w-1/4 px-2">Ticket No.</div>
                                 <div className="w-1/4 px-2">Customer</div>
                                 <div className="w-1/4 px-2">Activity</div>
                                 <div className="w-1/4 px-2">Date</div>
                             </div>
-                            <hr className="border-gray-300 mb-4" />
+                            <hr className="border-gray-300 mb-4 min-w-[500px]" />
 
-                            <div className="h-[200px] max-h-[300px] overflow-y-auto no-scrollbar">
+                            <div className="h-[200px] max-h-[300px] overflow-y-auto no-scrollbar min-w-[500px]">
                                 {/* Table rows */}
                                 {recentFollowUps && recentFollowUps.length > 0 ? (
                                     recentFollowUps.map((item: any, idx: number) => (
                                         <div
                                             key={idx}
                                             className={`flex ${idx > 0 ? "mt-3" : ""
-                                                } font-medium text-black min-w-[400px] hover:bg-white/50 p-2 rounded-lg transition-colors cursor-pointer`}
+                                                } font-medium text-black min-w-full hover:bg-white/50 p-2 rounded-lg transition-colors cursor-pointer`}
                                             onClick={() => router.push(`/tickets/${item.ticket_id}`)}
                                         >
                                             <div className="w-1/4 px-2 truncate">{item.Ticket?.ticket_number || "N/A"}</div>

@@ -95,7 +95,7 @@ export function useCustomerChat() {
         });
 
         // --- NEW LISTENER: Handle Agent Joining ---
-        socket.on("agent.joined", () => {
+        socket.on("agent.assigned", () => {
             setConnectionStatus("connected");
             setTyping(false);
             // Inject a local system message
