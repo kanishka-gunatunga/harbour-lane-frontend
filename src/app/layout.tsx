@@ -31,6 +31,7 @@ export const metadata: Metadata = {
 };
 
 import FloatingAgentDashboard from "@/components/FloatingAgentDashboard";
+import AgentWidgetToggle from "@/components/AgentWidgetToggle";
 
 export default function RootLayout({
   children,
@@ -45,6 +46,7 @@ export default function RootLayout({
           <SideMenu />
           <MobileNav />
           <FloatingAgentDashboard />
+          <AgentWidgetToggle />
           {children}
           <ChatLauncher />
         </Providers>

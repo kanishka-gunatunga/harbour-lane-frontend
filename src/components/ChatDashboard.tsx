@@ -6,6 +6,8 @@ import { useCurrentUser } from "@/utils/auth";
 import { ChatService } from "@/services/chatService";
 
 
+import { useWidget } from "@/context/WidgetContext";
+
 const SendIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
         <path
@@ -195,12 +197,19 @@ const ChatDashboard: React.FC<ChatDashboardProps> = ({ isWidget = false }) => {
     const [acceptingChatId, setAcceptingChatId] = useState<string | null>(null);
     const [lightboxUrl, setLightboxUrl] = useState<string | null>(null);
     const [channelFilter, setChannelFilter] = useState<string>("All");
+    const { isAgentDashboardOpen, setAgentDashboardOpen, selectionResetTrigger } = useWidget();
 
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [isUploading, setIsUploading] = useState(false);
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+    useEffect(() => {
+        if (selectionResetTrigger > 0) {
+            selectChat(null);
+        }
+    }, [selectionResetTrigger]);
 
     useEffect(() => {
         // Only clear accepting state if the chat is successfully added to assigned
@@ -305,7 +314,9 @@ const ChatDashboard: React.FC<ChatDashboardProps> = ({ isWidget = false }) => {
                 }
             >
                 {/* --- LEFT SIDEBAR (Lists) --- */}
-                <aside className={`w-full md:w-[320px] flex-col border-r border-gray-200 bg-white ${selectedChatId ? 'hidden md:flex' : 'flex'}`}>
+                <aside className={`flex-col border-r border-gray-200 bg-white 
+                    ${isWidget ? (selectedChatId ? 'hidden' : 'flex w-full') : (selectedChatId ? 'hidden md:flex w-full md:w-[320px]' : 'flex w-full md:w-[320px]')}
+                `}>
 
                     {/* Header */}
                     <div className="h-16 bg-[#F0F2F5] px-4 flex items-center gap-3 border-b border-gray-200">
@@ -400,9 +411,6 @@ const ChatDashboard: React.FC<ChatDashboardProps> = ({ isWidget = false }) => {
                                                     <p className="text-xs text-gray-500 truncate">
                                                         View conversation
                                                     </p>
-                                                    <span className="bg-gray-200 text-[9px] text-gray-600 px-1.5 rounded uppercase font-bold">
-                                                        {chat.channel || 'Web'}
-                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -425,7 +433,9 @@ const ChatDashboard: React.FC<ChatDashboardProps> = ({ isWidget = false }) => {
                     </div>
                 </aside>
 
-                <main className={`flex-1 flex-col relative bg-[#EFE7DD] bg-opacity-40 ${selectedChatId ? 'flex' : 'hidden md:flex'}`}>
+                <main className={`flex-1 flex-col relative bg-[#EFE7DD] bg-opacity-40 
+                    ${isWidget ? (selectedChatId ? 'flex' : 'hidden') : (selectedChatId ? 'flex' : 'hidden md:flex')}
+                `}>
                     <div className="absolute inset-0 opacity-[0.06] pointer-events-none"
                         style={{ backgroundImage: "url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png')" }}></div>
 
@@ -435,10 +445,10 @@ const ChatDashboard: React.FC<ChatDashboardProps> = ({ isWidget = false }) => {
                             <header
                                 className={`h-16 bg-[#F0F2F5] px-4 md:px-6 flex items-center justify-between border-b border-gray-300 z-10 ${isWidget ? 'pr-16 md:pr-16' : ''}`}>
                                 <div className="flex items-center gap-3">
-                                    {/* Back Button for Mobile */}
+                                    {/* Back Button for Mobile/Widget */}
                                     <button
                                         onClick={() => selectChat(null)}
-                                        className="md:hidden p-2 -ml-2 text-gray-600 hover:bg-gray-200 rounded-full"
+                                        className={`${(isWidget) ? 'flex' : 'md:hidden flex'} p-2 -ml-2 text-gray-600 hover:bg-gray-200 rounded-full`}
                                     >
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
                                             <path fillRule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z" />
@@ -463,16 +473,16 @@ const ChatDashboard: React.FC<ChatDashboardProps> = ({ isWidget = false }) => {
                                     </div>
                                 </div>
 
-                                {currentActiveChat && (
+                                {/* {currentActiveChat && (
                                     <ChatTimer startTime={currentActiveChat.updatedAt || currentActiveChat.last_message_at} />
-                                )}
+                                )} */}
 
-                                <button
+                                {/* <button
                                     onClick={() => closeChat(selectedChatId!)}
                                     className="text-red-600 hover:bg-red-50 px-3 py-1.5 rounded border border-transparent hover:border-red-200 text-xs font-medium transition"
                                 >
                                     End Chat
-                                </button>
+                                </button> */}
                             </header>
 
                             <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-3 z-10 custom-scrollbar">

@@ -6,17 +6,27 @@ interface WidgetContextType {
     isAgentDashboardOpen: boolean;
     toggleAgentDashboard: () => void;
     setAgentDashboardOpen: (open: boolean) => void;
+    selectionResetTrigger: number;
+    resetSelection: () => void;
 }
 
 const WidgetContext = createContext<WidgetContextType | undefined>(undefined);
 
 export const WidgetProvider = ({ children }: { children: ReactNode }) => {
     const [isAgentDashboardOpen, setAgentDashboardOpen] = useState(false);
+    const [selectionResetTrigger, setSelectionResetTrigger] = useState(0);
 
     const toggleAgentDashboard = () => setAgentDashboardOpen((prev) => !prev);
+    const resetSelection = () => setSelectionResetTrigger((prev) => prev + 1);
 
     return (
-        <WidgetContext.Provider value={{ isAgentDashboardOpen, toggleAgentDashboard, setAgentDashboardOpen }}>
+        <WidgetContext.Provider value={{
+            isAgentDashboardOpen,
+            toggleAgentDashboard,
+            setAgentDashboardOpen,
+            selectionResetTrigger,
+            resetSelection
+        }}>
             {children}
         </WidgetContext.Provider>
     );

@@ -33,7 +33,7 @@ export default function LoginPage() {
                 setIsLoading(false);
             } else {
                 console.log("[Login] Success, redirecting to /chat-dashboard");
-                router.replace("/tickets");
+                router.replace("/chat-dashboard");
                 // Keep loading true while redirecting
             }
         } catch (error) {

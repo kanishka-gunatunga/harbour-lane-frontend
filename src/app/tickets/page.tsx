@@ -360,7 +360,7 @@ export default function TicketsDashboard() {
                     }}
                 // isPriorityAvailable={true}
                 >
-                    <form className="flex w-full max-w-[800px] flex-col gap-4">
+                    <form className="flex w-full max-w-[900px] flex-col gap-4">
                         <div className="flex flex-col md:flex-row gap-4">
                             <div className="flex-1">
                                 <FormField
