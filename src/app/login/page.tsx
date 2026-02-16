@@ -57,7 +57,7 @@ export default function LoginPage() {
                             Email
                         </label>
                         <input
-                            className="w-full rounded border px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full rounded border px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#DB2727]"
                             id="email"
                             type="email"
                             placeholder="agent@example.com"
@@ -71,7 +71,7 @@ export default function LoginPage() {
                             Password
                         </label>
                         <input
-                            className="w-full rounded border px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full rounded border px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#DB2727]"
                             id="password"
                             type="password"
                             placeholder="********"
@@ -82,7 +82,7 @@ export default function LoginPage() {
                         />
                     </div>
                     <button
-                        className={`w-full rounded px-4 py-2 font-bold text-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${isLoading ? "bg-blue-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
+                        className={`w-full rounded px-4 py-2 font-bold text-white focus:outline-none focus:ring-2 focus:ring-[#DB2727] ${isLoading ? "bg-red-400 cursor-not-allowed" : "bg-[#DB2727] hover:bg-[#b01e1e]"
                             }`}
                         type="submit"
                         disabled={isLoading}
@@ -93,7 +93,7 @@ export default function LoginPage() {
 
                 <div className="mt-4 text-center text-sm">
                     <span className="text-gray-600">Don't have an account? </span>
-                    <Link href="/register" className="font-semibold text-blue-600 hover:text-blue-500">
+                    <Link href="/register" className="font-semibold text-[#DB2727] hover:text-[#b01e1e]">
                         Register
                     </Link>
                 </div>

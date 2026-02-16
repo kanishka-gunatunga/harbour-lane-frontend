@@ -60,7 +60,7 @@ export default function RegisterPage() {
                             Full Name
                         </label>
                         <input
-                            className="w-full rounded border px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full rounded border px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#DB2727]"
                             id="name"
                             type="text"
                             placeholder="John Doe"
@@ -74,7 +74,7 @@ export default function RegisterPage() {
                             Email
                         </label>
                         <input
-                            className="w-full rounded border px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full rounded border px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#DB2727]"
                             id="email"
                             type="email"
                             placeholder="agent@example.com"
@@ -88,7 +88,7 @@ export default function RegisterPage() {
                             Password
                         </label>
                         <input
-                            className="w-full rounded border px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full rounded border px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#DB2727]"
                             id="password"
                             type="password"
                             placeholder="********"
@@ -103,7 +103,7 @@ export default function RegisterPage() {
                             Confirm Password
                         </label>
                         <input
-                            className="w-full rounded border px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full rounded border px-3 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#DB2727]"
                             id="confirmPassword"
                             type="password"
                             placeholder="********"
@@ -113,7 +113,7 @@ export default function RegisterPage() {
                         />
                     </div>
                     <button
-                        className={`w-full rounded px-4 py-2 font-bold text-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${isLoading ? "bg-blue-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
+                        className={`w-full rounded px-4 py-2 font-bold text-white focus:outline-none focus:ring-2 focus:ring-[#DB2727] ${isLoading ? "bg-red-400 cursor-not-allowed" : "bg-[#DB2727] hover:bg-[#b01e1e]"
                             }`}
                         type="submit"
                         disabled={isLoading}
@@ -124,7 +124,7 @@ export default function RegisterPage() {
 
                 <div className="mt-4 text-center text-sm">
                     <span className="text-gray-600">Already have an account? </span>
-                    <Link href="/login" className="font-semibold text-blue-600 hover:text-blue-500">
+                    <Link href="/login" className="font-semibold text-[#DB2727] hover:text-[#b01e1e]">
                         Sign In
                     </Link>
                 </div>
