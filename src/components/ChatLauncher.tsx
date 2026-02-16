@@ -84,6 +84,13 @@ const ChatMessageContent = ({ msg, onImageClick }: { msg: any, onImageClick: (ur
     );
 };
 
+const MinimizeIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+        <path
+            d="M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8Z" />
+    </svg>
+);
+
 const CloseIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
         <path
@@ -485,13 +492,23 @@ export default function ChatLauncher() {
                             </div>
                         </div>
 
-                        <button
-                            onClick={handleClose}
-                            style={styles.closeButton}
-                            title={showRating ? "Close" : "End Chat"}
-                        >
-                            <CloseIcon />
-                        </button>
+                        <div style={{ display: 'flex', gap: '8px' }}>
+                            <button
+                                onClick={() => setOpen(false)}
+                                style={styles.closeButton}
+                                title="Minimize"
+                            >
+                                <MinimizeIcon />
+                            </button>
+
+                            <button
+                                onClick={handleClose}
+                                style={styles.closeButton}
+                                title={showRating ? "Close" : "End Chat"}
+                            >
+                                <CloseIcon />
+                            </button>
+                        </div>
 
                     </div>
 
