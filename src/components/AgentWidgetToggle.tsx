@@ -11,8 +11,8 @@ const AgentWidgetToggle = () => {
     const user = useCurrentUser();
     const pathname = usePathname();
 
-    // Only show for agents/admins AND only on /tickets page
-    if (!user || pathname !== '/tickets') return null;
+    // Only show for agents/admins AND only on /tickets pages (including details)
+    if (!user || !pathname?.startsWith('/tickets')) return null;
 
     const handleClick = () => {
         toggleAgentDashboard();
