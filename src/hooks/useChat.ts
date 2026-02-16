@@ -164,11 +164,13 @@ export function useAgentChat(agentId: number | undefined) {
     };
 
     const acceptChat = (chat_id: string) => {
+        console.log("acceptChat called for:", chat_id, "Agent ID:", agentId);
         if (!agentId) return;
 
         // Optimistic Update: Remove from queue and add to assigned immediately
         const chatToMove = queue.find(c => c.chat_id === chat_id);
         if (chatToMove) {
+            console.log("Found chat in queue, moving optimistically...");
             setQueue(prev => prev.filter(c => c.chat_id !== chat_id));
             setAssigned(prev => {
                 // Prevent duplicates
@@ -176,6 +178,8 @@ export function useAgentChat(agentId: number | undefined) {
                 // Add to top of assigned list with updated status
                 return [{ ...chatToMove, status: 'assigned', agent_id: agentId, unread_count: 0 }, ...prev];
             });
+        } else {
+            console.warn("Chat not found in queue state:", chat_id);
         }
 
         socketRef.current?.emit("agent.accept", { chat_id, agent_id: agentId });

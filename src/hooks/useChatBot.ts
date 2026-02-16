@@ -13,6 +13,7 @@ export function useCustomerChat() {
     const [messages, setMessages] = useState<any[]>([]);
     const [typing, setTyping] = useState(false);
     const [showRating, setShowRating] = useState(false);
+    const isInitialLoadRef = useRef(true);
 
     // New State: Track status
     const [connectionStatus, setConnectionStatus] = useState<"bot" | "connecting" | "connected">("bot");
@@ -42,17 +43,19 @@ export function useCustomerChat() {
     });
 
     useEffect(() => {
-        if (messagesQuery.data && messagesQuery.data.length > 0) {
+        if (messagesQuery.data) {
             setMessages(messagesQuery.data);
 
-            const firstMsg = messagesQuery.data[0];
-            const sessionStatus = firstMsg.session?.status; // Check recent session status if available
+            const session = messagesQuery.data[0]?.session; // Check recent session status if available
 
-            if (sessionStatus === 'assigned') {
+            if (session?.status === 'assigned') {
                 setConnectionStatus("connected");
-            } else if (sessionStatus === 'queued') {
+            } else if (session?.status === 'queued') {
                 setConnectionStatus("connecting");
             }
+
+            // Mark initial load as finished
+            isInitialLoadRef.current = false;
         }
     }, [messagesQuery.data]);
 
@@ -96,18 +99,32 @@ export function useCustomerChat() {
 
         // --- NEW LISTENER: Handle Agent Joining ---
         socket.on("agent.assigned", () => {
-            setConnectionStatus("connected");
-            setTyping(false);
-            // Inject a local system message
-            setMessages((prev) => [
-                ...prev,
-                {
-                    id: "sys-" + Date.now(),
-                    sender: "system",
-                    message: "A live agent has joined the chat",
-                    createdAt: new Date().toISOString()
+            setConnectionStatus((prevStatus) => {
+                // Only inject the LOCAL message if:
+                // 1. We weren't already connected (new assignment event)
+                // 2. We aren't in the middle of initial page load (session restoration)
+                if (prevStatus !== "connected" && !isInitialLoadRef.current) {
+                    setMessages((prevMsgs) => {
+                        const messageText = "A live agent has joined the chat";
+                        const stableId = "sys-agent-joined";
+
+                        // Prevent duplicates by checking stable ID
+                        if (prevMsgs.some(m => m.id === stableId)) return prevMsgs;
+
+                        return [
+                            ...prevMsgs,
+                            {
+                                id: stableId,
+                                sender: "system",
+                                message: messageText,
+                                createdAt: new Date().toISOString()
+                            }
+                        ];
+                    });
                 }
-            ]);
+                return "connected";
+            });
+            setTyping(false);
         });
 
         // --- NEW LISTENER: Handle Handoff ---
@@ -126,20 +143,6 @@ export function useCustomerChat() {
     }, [chatId]);
 
 
-    useEffect(() => {
-        if (messagesQuery.data) {
-            setMessages(messagesQuery.data);
-            // Optional: If your API returns the chat status in the message list or separate query,
-            // you should set setIsAgentActive(true) here if the chat is already assigned.
-
-            const session = messagesQuery.data[0]?.session;
-            if (session?.status === 'assigned') {
-                setConnectionStatus("connected");
-            } else if (session?.status === 'queued') {
-                setConnectionStatus("connecting");
-            }
-        }
-    }, [messagesQuery.data]);
 
 
     // const sendMessage = (text: string) => {

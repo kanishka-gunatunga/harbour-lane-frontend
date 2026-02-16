@@ -166,13 +166,15 @@ const ChatMessageContent = ({ msg, onImageClick }: { msg: any, onImageClick: (ur
 };
 
 
-const ChatDashboard: React.FC = () => {
+interface ChatDashboardProps {
+    isWidget?: boolean;
+}
+
+const ChatDashboard: React.FC<ChatDashboardProps> = ({ isWidget = false }) => {
 
     const user = useCurrentUser();
 
     const agentId = user ? Number((user as any).id) : undefined;
-
-    console.log("agentId", agentId);
 
     const {
         queue,
@@ -200,13 +202,18 @@ const ChatDashboard: React.FC = () => {
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-    // const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
-
     useEffect(() => {
-        setAcceptingChatId(null);
-    }, [queue]);
+        // Only clear accepting state if the chat is successfully added to assigned
+        // and removed from queue, or if the queue fetch confirms it's gone.
+        if (acceptingChatId) {
+            const isStillInQueue = queue.some(c => c.chat_id === acceptingChatId);
+            const isNowAssigned = assigned.some(c => c.chat_id === acceptingChatId);
+            if (!isStillInQueue || isNowAssigned) {
+                setAcceptingChatId(null);
+            }
+        }
+    }, [queue, assigned]);
 
-    // Auto-scroll to bottom
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     }, [messages, isCustomerTyping]);
@@ -243,14 +250,8 @@ const ChatDashboard: React.FC = () => {
 
         setIsUploading(true);
         try {
-            // 1. Upload
             const data = await ChatService.uploadFile(file);
-
-            // 2. Determine Type
             const type = file.type.startsWith("image/") ? "image" : "document";
-
-            // 3. Send Message with Attachment
-            // Note: Ensure your useAgentChat 'sendMessage' accepts this second argument
             sendMessage("", {
                 url: data.url,
                 type: type,
@@ -269,6 +270,10 @@ const ChatDashboard: React.FC = () => {
     const currentActiveChat = assigned.find(c => c.chat_id === selectedChatId);
 
     const filteredQueue = queue.filter(chat => {
+        // Defensive filtering: Ensure we don't show chats that are already assigned
+        // (prevents stale queue fetches from showing accepted chats)
+        if (assigned.some(a => a.chat_id === chat.chat_id)) return false;
+
         if (channelFilter === "All") return true;
         if (channelFilter === "Messenger") return chat.channel === "Facebook";
         return chat.channel === channelFilter;
@@ -282,20 +287,23 @@ const ChatDashboard: React.FC = () => {
 
     if (!agentId) {
         return (
-            <div className="flex items-center justify-center min-h-screen w-full bg-[#e0e0e0] p-6">
+            <div className={isWidget ? "h-full w-full flex items-center justify-center bg-gray-50" : "flex items-center justify-center min-h-screen w-full bg-[#e0e0e0] p-6"}>
                 Loading Agent Dashboard...
             </div>
         )
     }
 
     return (
-        <div className="flex items-center justify-center min-h-screen w-full bg-[#e0e0e0] p-6 pt-28 pb-20 md:p-24 md:pt-32">
+        <div className={isWidget ? "flex flex-col w-full h-full bg-white overflow-hidden" : "flex items-center justify-center min-h-screen w-full bg-[#e0e0e0] p-6 pt-28 pb-20 md:p-24 md:pt-32"}>
             {lightboxUrl && <ImageLightbox src={lightboxUrl} onClose={() => setLightboxUrl(null)} />}
 
-            {/* --- Main Card Container (Resized) --- */}
+            {/* --- Main Card Container --- */}
             <div
-                className="flex w-full md:max-w-6xl h-[calc(100vh-3rem)] md:h-[75vh] bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200">
-
+                className={isWidget
+                    ? "flex flex-1 h-full overflow-hidden"
+                    : "flex w-full md:max-w-6xl h-[calc(100vh-3rem)] md:h-[75vh] bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200"
+                }
+            >
                 {/* --- LEFT SIDEBAR (Lists) --- */}
                 <aside className={`w-full md:w-[320px] flex-col border-r border-gray-200 bg-white ${selectedChatId ? 'hidden md:flex' : 'flex'}`}>
 
@@ -425,7 +433,7 @@ const ChatDashboard: React.FC = () => {
                         <>
                             {/* Chat Header */}
                             <header
-                                className="h-16 bg-[#F0F2F5] px-4 md:px-6 flex items-center justify-between border-b border-gray-300 z-10">
+                                className={`h-16 bg-[#F0F2F5] px-4 md:px-6 flex items-center justify-between border-b border-gray-300 z-10 ${isWidget ? 'pr-16 md:pr-16' : ''}`}>
                                 <div className="flex items-center gap-3">
                                     {/* Back Button for Mobile */}
                                     <button
@@ -472,9 +480,7 @@ const ChatDashboard: React.FC = () => {
 
                                     if (index > 0 && messages[index - 1].id === msg.id) return null;
 
-                                    // const isAgent = msg.sender === "agent";
                                     const isOutbound = msg.sender === "agent" || msg.sender === "bot";
-
                                     const isSystem = msg.sender === "system";
 
                                     if (isSystem) {
